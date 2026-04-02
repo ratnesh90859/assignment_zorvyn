@@ -52,12 +52,19 @@ const createApp = () => {
     next();
   });
 
-  // Swagger UI with better performance settings
+  // Serve raw Swagger JSON spec
+  app.get('/api-docs/swagger.json', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(swaggerSpec);
+  });
+
+  // Swagger UI
   app.use('/api-docs', swaggerUi.serve);
   app.get('/api-docs', swaggerUi.setup(swaggerSpec, {
     customCss: '.swagger-ui .topbar { display: none }',
     customSiteTitle: 'Finance API Documentation',
     swaggerOptions: {
+      url: '/api-docs/swagger.json',
       persistAuthorization: true,
       displayRequestDuration: true,
       filter: true,

@@ -23,7 +23,7 @@ class RecordController {
       }
 
       const recordData = req.body;
-      const record = recordService.createRecord(userId, recordData);
+      const record = await recordService.createRecord(userId, recordData);
 
       logger.info('Record created', { recordId: record.id, userId });
       
@@ -60,12 +60,13 @@ class RecordController {
       }
 
       const filters = req.query;
-      const result = recordService.getRecords(userId, filters);
+      const result = await recordService.getRecords(userId, filters);
 
       res.status(200).json({
         success: true,
         message: 'Records retrieved successfully',
-        data: result
+        data: result.data,
+        pagination: result.pagination
       });
     } catch (error) {
       logger.error('Get records error', { error: error.message });
@@ -95,7 +96,7 @@ class RecordController {
         });
       }
 
-      const record = recordService.getRecordById(id, userId);
+      const record = await recordService.getRecordById(id, userId);
 
       res.status(200).json({
         success: true,
@@ -131,7 +132,7 @@ class RecordController {
       }
 
       const updates = req.body;
-      const record = recordService.updateRecord(id, userId, updates);
+      const record = await recordService.updateRecord(id, userId, updates);
 
       logger.info('Record updated', { recordId: id, userId });
       
@@ -168,7 +169,7 @@ class RecordController {
         });
       }
 
-      recordService.deleteRecord(id, userId);
+      await recordService.deleteRecord(id, userId);
 
       logger.info('Record deleted', { recordId: id, userId });
       

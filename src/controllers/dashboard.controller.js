@@ -25,7 +25,7 @@ class DashboardController {
       const includeMonthly = req.query.monthly !== 'false';
       const includeWeekly = req.query.weekly === 'true';
 
-      const summary = dashboardService.getDashboardSummary(userId, includeMonthly, includeWeekly);
+      const summary = await dashboardService.getDashboardSummary(userId, includeMonthly, includeWeekly);
 
       res.status(200).json({
         success: true,
@@ -59,7 +59,7 @@ class DashboardController {
         });
       }
 
-      const incomeSummary = dashboardService.getIncomeSummary(userId);
+      const incomeSummary = await dashboardService.getIncomeSummary(userId);
 
       res.status(200).json({
         success: true,
@@ -93,7 +93,7 @@ class DashboardController {
         });
       }
 
-      const expenseSummary = dashboardService.getExpenseSummary(userId);
+      const expenseSummary = await dashboardService.getExpenseSummary(userId);
 
       res.status(200).json({
         success: true,

@@ -115,8 +115,9 @@ const filterRecordsSchema = Joi.object({
  * ID Parameter Validation
  */
 const idParamSchema = Joi.object({
-  id: Joi.string().uuid().required().messages({
-    'string.guid': 'Invalid ID format',
+  id: Joi.string().length(24).hex().required().messages({
+    'string.length': 'Invalid ID format',
+    'string.hex': 'Invalid ID format',
     'any.required': 'ID is required'
   })
 });

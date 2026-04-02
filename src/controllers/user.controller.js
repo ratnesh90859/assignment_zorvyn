@@ -12,7 +12,7 @@ class UserController {
    */
   async getAllUsers(req, res) {
     try {
-      const users = userService.getAllUsersSafe();
+      const users = await userService.getAllUsersSafe();
 
       res.status(200).json({
         success: true,
@@ -37,7 +37,7 @@ class UserController {
   async getUserById(req, res) {
     try {
       const { id } = req.params;
-      const user = userService.getUserSafe(id);
+      const user = await userService.getUserSafe(id);
 
       res.status(200).json({
         success: true,
@@ -71,7 +71,7 @@ class UserController {
         });
       }
 
-      const user = userService.getUserSafe(userId);
+      const user = await userService.getUserSafe(userId);
 
       res.status(200).json({
         success: true,
@@ -107,15 +107,22 @@ class UserController {
         });
       }
 
-      const updatedUser = userService.updateUser(id, updates, requestingUserRole);
-      const { password, ...userWithoutPassword } = updatedUser;
+      const updatedUser = await userService.updateUser(id, updates, requestingUserRole);
 
       logger.info('User updated', { userId: id });
       
       res.status(200).json({
         success: true,
         message: 'User updated successfully',
-        data: userWithoutPassword
+        data: {
+          id: updatedUser._id.toString(),
+          email: updatedUser.email,
+          name: updatedUser.name,
+          role: updatedUser.role,
+          status: updatedUser.status,
+          createdAt: updatedUser.createdAt,
+          updatedAt: updatedUser.updatedAt
+        }
       });
     } catch (error) {
       logger.error('Update user error', { error: error.message });
@@ -136,7 +143,7 @@ class UserController {
     try {
       const { id } = req.params;
       
-      userService.deleteUser(id);
+      await userService.deleteUser(id);
 
       logger.info('User deleted', { userId: id });
       
